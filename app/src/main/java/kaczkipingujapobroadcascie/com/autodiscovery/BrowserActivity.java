@@ -27,7 +27,7 @@ public class BrowserActivity extends Activity {
         });
 
         Bundle data = getIntent().getExtras();
-        webView.loadUrl(data.getString("url"));
+        webView.loadUrl("http://" + data.getString("url"));
     }
 
     @Override

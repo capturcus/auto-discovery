@@ -84,6 +84,11 @@ public class WifiUtils {
 
         WifiManager mgr = (WifiManager)
                 context.getSystemService(Context.WIFI_SERVICE);
+
+        if(mgr.isWifiEnabled() && newConf.SSID.equals(mgr.getConnectionInfo().getSSID())) {
+            callback.onConnect(true);
+            return;
+        }
         mgr.setWifiEnabled(true);
         mgr.addNetwork(newConf);
 
