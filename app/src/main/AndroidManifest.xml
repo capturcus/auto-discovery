@@ -20,11 +20,13 @@
         <service android:name="com.kontakt.sdk.android.manager.BeaconService" android:exported="false"/>
         <service android:name="com.kontakt.sdk.android.manager.BeaconServiceL" android:exported="false"/>
         <service android:name="com.kontakt.sdk.android.manager.ActionService" android:exported="false"/>
-        <meta-data android:name="kontakt.io.API_KEY" android:value="[REDACTED]"/>
+        <meta-data android:name="kontakt.io.API_KEY" android:value="gGGHXCvkzEUjpKTaxtqCriajjmucrYyP"/>
     </application>
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 </manifest>
