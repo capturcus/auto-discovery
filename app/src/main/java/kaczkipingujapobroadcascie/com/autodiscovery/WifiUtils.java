@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
@@ -34,18 +35,15 @@ public class WifiUtils {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("debug", "onReceive");
-            if(intent.getAction().equals(
-                    WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
-                boolean success = false;
-                Log.d("debug", ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getSSID());
-                if(intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false)) {
-                    WifiManager mgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-                    if("\"" + mgr.getConnectionInfo().getSSID() + "\"" == this.ssid_)
-                        success = true;
+            if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+                NetworkInfo info = (NetworkInfo) intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                if(info.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
+                    context.unregisterReceiver(this);
+                    callback_.onConnect(true);
+                } else if(info.getDetailedState() == NetworkInfo.DetailedState.FAILED) {
+                    context.unregisterReceiver(this);
+                    callback_.onConnect(false);
                 }
-
-                context.unregisterReceiver(this);
-                callback_.onConnect(success);
             }
         }
 
@@ -84,6 +82,7 @@ public class WifiUtils {
 
         WifiManager mgr = (WifiManager)
                 context.getSystemService(Context.WIFI_SERVICE);
+        mgr.setWifiEnabled(true);
         mgr.addNetwork(newConf);
 
         List<WifiConfiguration> confs = mgr.getConfiguredNetworks();
@@ -107,7 +106,7 @@ public class WifiUtils {
         }
 
         IntentFilter filter = new IntentFilter();
-        filter.addAction(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION);
+        filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         context.registerReceiver(new ConnectBroadcastReceiver(newConf.SSID, callback), filter);
     }
 }
