@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
 
     private void runInterface(ZeroConfInterface zinterface) {
         WifiUtils.connect(getApplicationContext(), zinterface.ssid, zinterface.password,
-                WifiUtils.EncryptionType.valueOf(zinterface.encryptionType),
+                WifiUtils.EncryptionType.valueOf(zinterface.authType),
                 new WifiUtils.ConnectCallback() {
                     @Override
                     public void onConnect(boolean success) {
