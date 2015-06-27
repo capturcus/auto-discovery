@@ -2,6 +2,7 @@ package kaczkipingujapobroadcascie.com.autodiscovery;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -21,14 +22,19 @@ public class WifiTest extends Activity {
     }
 
     public void onConnectClick(View v) {
-        WifiUtils.connect(getApplicationContext(), ((EditText) findViewById(R.id.ssid)).getText().toString(), ((EditText) findViewById(R.id.password)).getText().toString(), WifiUtils.EncryptionType.ENC_WPA, new WifiUtils.ConnectCallback() {
+        WifiUtils.connect(getApplicationContext(), ((EditText) findViewById(R.id.ssid)).getText().toString(), ((EditText) findViewById(R.id.password)).getText().toString(), WifiUtils.EncryptionType.WPA, new WifiUtils.ConnectCallback() {
             @Override
             public void onConnect(boolean success) {
-                Log.d("debug", "onConnect");
-                if(success)
-                    ((TextView) findViewById(R.id.textView)).setText("success");
-                else
-                    ((TextView) findViewById(R.id.textView)).setText("fuck");
+            Log.d("debug", "onConnect");
+            if(success) {
+                Intent intent = new Intent(WifiTest.this, BrowserActivity.class);
+                Bundle data = new Bundle();
+                data.putString("url", "http://google.com");
+                intent.putExtras(data);
+                startActivity(intent);
+            }
+            else
+                ((TextView) findViewById(R.id.textView)).setText("fuck");
             }
         });
     }

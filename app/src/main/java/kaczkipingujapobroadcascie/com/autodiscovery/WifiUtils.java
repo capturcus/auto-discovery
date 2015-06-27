@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class WifiUtils {
     public enum EncryptionType {
-        ENC_NONE,
-        ENC_WEP,
-        ENC_WPA
+        NONE,
+        WEP,
+        WPA
     }
 
     public interface ConnectCallback {
@@ -37,6 +37,7 @@ public class WifiUtils {
             Log.d("debug", "onReceive");
             if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
                 NetworkInfo info = (NetworkInfo) intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+                Log.d("debug", info.getDetailedState().toString());
                 if(info.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
                     context.unregisterReceiver(this);
                     callback_.onConnect(true);
@@ -49,6 +50,7 @@ public class WifiUtils {
 
         private String ssid_;
         private ConnectCallback callback_;
+        private int disconnectedCount_ = 0;
     }
 
     private WifiUtils() {
@@ -61,12 +63,12 @@ public class WifiUtils {
         Log.d("debug", "dupa1");
 
         switch(enc) {
-            case ENC_NONE:
+            case NONE:
                 newConf.allowedKeyManagement.set(
                         WifiConfiguration.KeyMgmt.NONE);
                 break;
 
-            case ENC_WEP:
+            case WEP:
                 newConf.wepKeys[0] = "\"" + password + "\"";
                 newConf.wepTxKeyIndex = 0;
                 newConf.allowedKeyManagement.set(
@@ -75,7 +77,7 @@ public class WifiUtils {
                         WifiConfiguration.GroupCipher.WEP40);
                 break;
 
-            case ENC_WPA:
+            case WPA:
                 newConf.preSharedKey = "\"" + password + "\"";
                 break;
         }
