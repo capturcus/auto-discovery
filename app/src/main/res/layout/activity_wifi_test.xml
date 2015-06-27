@@ -1,0 +1,44 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="kaczkipingujapobroadcascie.com.autodiscovery.WifiTest">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ssid"
+        android:layout_marginStart="38dp"
+        android:width="100dp"
+        android:height="20dp"
+        android:layout_alignParentStart="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/password"
+        android:width="100dp"
+        android:height="20dp"
+        android:layout_below="@+id/ssid"
+        android:layout_alignStart="@+id/ssid" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="connect"
+        android:id="@+id/button"
+        android:layout_below="@+id/password"
+        android:layout_alignStart="@+id/password"
+        android:onClick="onConnectClick" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Large Text"
+        android:id="@+id/textView"
+        android:layout_below="@+id/button"
+        android:layout_alignStart="@+id/button" />
+</RelativeLayout>
