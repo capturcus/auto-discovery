@@ -143,6 +143,7 @@ public class BeaconCommunication {
         assert service.equals("wifi");
         ZeroConfInterface zinf = new ZeroConfInterface();
 
+        zinf.name = metadata.getAlias();
         zinf.ssid = metadata.getString("ssid");
         zinf.password = metadata.getString("pass");
         zinf.auth_type = metadata.getString("auth_type");
