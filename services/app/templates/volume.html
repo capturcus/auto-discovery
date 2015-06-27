@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="card-panel grey lighten-2">
+        <label>
+            <h3 class="center">Volume</h3>
+
+            <p class="range-field">
+                <input type="range" name="volume" id="volume" min="0" max="100" value="{{ volume }}"
+                       onchange="onChange()">
+            </p>
+        </label>
+    </div>
+    <script>
+        function onChange() {
+            $.ajax({
+                method: "POST",
+                url: '{% url 'volume' %}',
+                data: {
+                    volume: $('#volume').val()
+                },
+                success: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+    </script>
+{% endblock %}
