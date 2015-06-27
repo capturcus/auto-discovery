@@ -1,0 +1,20 @@
+{
+  "name": "static",
+  "version": "0.0.0",
+  "homepage": "https://github.com/capturcus/auto-discovery",
+  "authors": [
+    "Leonid Logvinov <logvinov.leon@yandex.ru>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "materialize": "~0.97.0"
+  }
+}
