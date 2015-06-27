@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
         bc.stopSearch();
     }
 
-    private void runInterface(ZeroConfInterface zinterface) {
+    private void runInterface(final ZeroConfInterface zinterface) {
         WifiUtils.connect(getApplicationContext(), zinterface.ssid, zinterface.password,
                 WifiUtils.EncryptionType.valueOf(zinterface.authType),
                 new WifiUtils.ConnectCallback() {
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
                         if(success) {
                             Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
                             Bundle data = new Bundle();
-                            data.putString("url", "http://google.com");
+                            data.putString("url", zinterface.url);
                             intent.putExtras(data);
                             startActivity(intent);
                         } else {
