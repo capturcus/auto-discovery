@@ -8,17 +8,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements BeaconCommunication.OnInterfacesFoundListener {
 
-    ArrayAdapter<String> aa = null;
+    RowAdapter ra = null;
+
     public static MainActivity instance = null;
 
     BeaconCommunication bc = null;
@@ -35,12 +38,18 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
         bc = new BeaconCommunication();
         bc.onCreate(getApplicationContext());
 
-        aa = new ArrayAdapter<>(getApplicationContext(),
-                R.layout.row);
+        ra = new RowAdapter(getApplicationContext());
 
         setContentView(R.layout.activity_main);
         ListView lv = (ListView)findViewById(R.id.list_view);
-        lv.setAdapter(aa);
+        lv.setAdapter(ra);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ZeroConfInterface zci = ra.getItem(position);
+                runInterface(zci);
+            }
+        });
 
         BluetoothAdapter.getDefaultAdapter().enable();
 
@@ -75,20 +84,26 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
         bc.onDestroy();
     }
 
+    public void insertFakeData() {
+        ZeroConfInterface test = new ZeroConfInterface();
+        test.name = "test1";
+        test.ssid = "print";
+    }
+
     @Override
     public void interfacesFound(final List<ZeroConfInterface> zinterfaces) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                aa.clear();
+                ra.clear();
                 for (ZeroConfInterface zci : zinterfaces) {
-                    if (zci != null && zci.name != null) {
-                        aa.add(zci.name);
+                    if (zci != null) {
+                        ra.add(zci);
                     }
                 }
-                aa.notifyDataSetChanged();
+                ra.notifyDataSetChanged();
                 ProgressBar pb = (ProgressBar) findViewById(R.id.spinner);
-                if (aa.isEmpty()) {
+                if (ra.isEmpty()) {
                     pb.setVisibility(View.VISIBLE);
                 } else {
                     pb.setVisibility(View.GONE);
