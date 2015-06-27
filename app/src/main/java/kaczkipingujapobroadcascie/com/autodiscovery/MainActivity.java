@@ -1,14 +1,18 @@
 package kaczkipingujapobroadcascie.com.autodiscovery;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
             public void run() {
                 aa.clear();
                 for (ZeroConfInterface zci : zinterfaces) {
-                    if(zci != null && zci.name != null){
+                    if (zci != null && zci.name != null) {
                         aa.add(zci.name);
                     }
                 }
@@ -97,5 +101,25 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
     public void onPause() {
         super.onPause();
         bc.stopSearch();
+    }
+
+    private void runInterface(ZeroConfInterface zinterface) {
+        WifiUtils.connect(getApplicationContext(), zinterface.ssid, zinterface.password,
+                WifiUtils.EncryptionType.valueOf(zinterface.encryptionType),
+                new WifiUtils.ConnectCallback() {
+                    @Override
+                    public void onConnect(boolean success) {
+                        Log.d("debug", "onConnect");
+                        if(success) {
+                            Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
+                            Bundle data = new Bundle();
+                            data.putString("url", "http://google.com");
+                            intent.putExtras(data);
+                            startActivity(intent);
+                        } else {
+                            // error handling
+                        }
+                    }
+                });
     }
 }
