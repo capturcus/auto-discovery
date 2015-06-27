@@ -20,7 +20,7 @@
         <service android:name="com.kontakt.sdk.android.manager.BeaconService" android:exported="false"/>
         <service android:name="com.kontakt.sdk.android.manager.BeaconServiceL" android:exported="false"/>
         <service android:name="com.kontakt.sdk.android.manager.ActionService" android:exported="false"/>
-        <meta-data android:name="kontakt.io.API_KEY" android:value="[REDACTED]"/>
+        <meta-data android:name="kontakt.io.API_KEY" android:value="JjsmveuJIirxsLIuexDpeCgeqgjmSfts"/>
     </application>
 
     <uses-permission android:name="android.permission.BLUETOOTH"/>

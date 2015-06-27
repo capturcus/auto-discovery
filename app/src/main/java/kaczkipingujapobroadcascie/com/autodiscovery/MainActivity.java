@@ -1,17 +1,46 @@
 package kaczkipingujapobroadcascie.com.autodiscovery;
 
-import android.support.v7.app.ActionBarActivity;
+import android.bluetooth.BluetoothAdapter;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
+import java.util.List;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity implements BeaconCommunication.OnInterfacesFoundListener {
+
+    ArrayAdapter<String> aa = null;
+    public static MainActivity instance = null;
+
+    BeaconCommunication bc = null;
+
+    public MainActivity() {
+        super();
+        instance = this;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        bc = new BeaconCommunication();
+        bc.onCreate(getApplicationContext());
+
+        aa = new ArrayAdapter<>(getApplicationContext(),
+                R.layout.row);
+
         setContentView(R.layout.activity_main);
+        ListView lv = (ListView)findViewById(R.id.list_view);
+        lv.setAdapter(aa);
+
+        BluetoothAdapter.getDefaultAdapter().enable();
+
+        bc.startSearch(this);
     }
 
     @Override
@@ -34,5 +63,39 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        bc.onDestroy();
+    }
+
+    @Override
+    public void interfacesFound(final List<ZeroConfInterface> zinterfaces) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                aa.clear();
+                for (ZeroConfInterface zci : zinterfaces) {
+                    if(zci != null && zci.name != null){
+                        aa.add(zci.name);
+                    }
+                }
+                aa.notifyDataSetChanged();
+                ProgressBar pb = (ProgressBar) findViewById(R.id.spinner);
+                if (aa.isEmpty()) {
+                    pb.setVisibility(View.VISIBLE);
+                } else {
+                    pb.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        bc.stopSearch();
     }
 }
