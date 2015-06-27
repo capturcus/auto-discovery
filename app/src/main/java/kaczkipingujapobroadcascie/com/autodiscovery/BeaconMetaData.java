@@ -1,5 +1,7 @@
 package kaczkipingujapobroadcascie.com.autodiscovery;
 
+import android.util.Log;
+
 import com.kontakt.sdk.android.device.BeaconDevice;
 import com.loopj.android.http.*;
 
@@ -27,11 +29,10 @@ public class BeaconMetaData
         String url = DEVICE_URL;
         url = url.concat(m_device.getUniqueId());
 
-        RequestParams params = new RequestParams();
-        params.add("Accept", "application/vnd.com.kontakt+json; version=6");
-        params.add("Api-Key", api_key);
+        http_client.addHeader("Accept", "application/vnd.com.kontakt+json; version=6");
+        http_client.addHeader("Api-Key", api_key);
 
-        http_client.post(url, params, new AsyncHttpResponseHandler() {
+        http_client.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 String json_str = new String(responseBody);
@@ -51,6 +52,12 @@ public class BeaconMetaData
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 // TODO: Do something on fail
                 error.printStackTrace();
+            }
+            
+            @Override
+            public boolean getUseSynchronousMode()
+            {
+                return false;
             }
         });
 
