@@ -170,6 +170,7 @@ public class BeaconCommunication {
             zinf.ssid = metadata.getString("ssid");
             zinf.password = metadata.getString("pass");
             zinf.authType = metadata.getString("auth_type");
+            zinf.url = metadata.getString("url");
 
             BeaconData bdata = m_devices.get(beacon);
             if (bdata != null) {
