@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:textColor="#000"
-    android:fontFamily="Impact"
-    android:textSize="16pt"
-    android:padding="16dp"
     >
-</TextView>
+    <TextView
+        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textColor="#000"
+        android:fontFamily="Impact"
+        android:textSize="16pt"
+        android:padding="16dp"
+        android:id="@+id/beacon_name"
+        >
+    </TextView>
+    <TextView
+        android:textColor="#000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TEST TEST"
+        android:background="#f0f"
+        android:id="@+id/test_view"
+        />
+    <TextView
+        android:textColor="#000"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#0ff"
+        android:text="TEST TEST2"
+        android:id="@+id/test_view2"
+        />
+</LinearLayout>

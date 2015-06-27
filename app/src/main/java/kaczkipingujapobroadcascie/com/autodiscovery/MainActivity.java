@@ -84,6 +84,12 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
         bc.onDestroy();
     }
 
+    public void insertFakeData() {
+        ZeroConfInterface test = new ZeroConfInterface();
+        test.name = "test1";
+        test.ssid = "print";
+    }
+
     @Override
     public void interfacesFound(final List<ZeroConfInterface> zinterfaces) {
         runOnUiThread(new Runnable() {

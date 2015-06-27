@@ -55,8 +55,13 @@ public class RowAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View v = inflater.inflate(R.layout.row, parent, false);
-        TextView tv = (TextView)v;
-        tv.setText(getItem(position).name);
+        TextView tv =(TextView) v.findViewById(R.id.beacon_name);
+        ZeroConfInterface zci = getItem(position);
+        tv.setText(zci.name);
+        TextView tv2 =(TextView) v.findViewById(R.id.test_view);
+        tv2.setText("HUEHUE");
+        TextView tv3 =(TextView) v.findViewById(R.id.test_view2);
+        tv3.setText("LOLOLO");
         return v;
     }
 }
