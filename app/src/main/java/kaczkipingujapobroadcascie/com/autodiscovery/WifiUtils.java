@@ -37,9 +37,10 @@ public class WifiUtils {
             if(intent.getAction().equals(
                     WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION)) {
                 boolean success = false;
+                Log.d("debug", ((WifiManager) context.getSystemService(Context.WIFI_SERVICE)).getConnectionInfo().getSSID());
                 if(intent.getBooleanExtra(WifiManager.EXTRA_SUPPLICANT_CONNECTED, false)) {
                     WifiManager mgr = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-                    if(mgr.getConnectionInfo().getSSID() == this.ssid_)
+                    if("\"" + mgr.getConnectionInfo().getSSID() + "\"" == this.ssid_)
                         success = true;
                 }
 
