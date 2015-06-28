@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block body %}
+    <script>
+        $(function () {
+            var handler = function (event) {
+                event.preventDefault();
+                event = event.originalEvent || event;
+
+                $.ajax({
+                    method: "POST",
+                    url: '{% url 'agario' %}',
+                    data: {
+                        x: event.touches[0].clientX / window.innerWidth,
+                        y: event.touches[0].clientY / window.innerHeight
+                    },
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            };
+            $(document).on("touchend", function (event) {
+                event.preventDefault();
+            });
+            $(document).on("touchmove", handler);
+        });
+    </script>
+{% endblock %}

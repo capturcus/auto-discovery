@@ -1,10 +1,11 @@
 # coding=utf-8
-import os
 import subprocess
 
+import os
+import gtk
 from app.forms import DocumentForm
-from django.core.urlresolvers import reverse_lazy
 
+from django.core.urlresolvers import reverse_lazy
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.views.generic import FormView
@@ -14,29 +15,37 @@ from services import settings
 
 class SlidesView(View):
     def get(self, request):
+        print "Slides get"
         return render(request, 'slides.html')
 
     def post(self, request):
+        print "Slides post"
         data = dict(self.request.POST.iteritems())
         action = data.pop("action")
+        print action
         if action == "left":
             print "left"
             subprocess.call(["xdotool", "key", "Left"])
         elif action == "right":
             print "right"
             subprocess.call(["xdotool", "key", "Right"])
+        print "Slides OK"
         return HttpResponse("OK")
 
 
 class VolumeView(View):
     def get(self, request):
+        print "Volume get"
         return render(request, 'volume.html', {"volume": self.get_volume()})
 
     def post(self, request):
+        print "Volume POST"
         data = dict(self.request.POST.iteritems())
         volume = int(data.pop("volume", 0))
         assert (0 <= volume <= 100)
+        print "set " + str(volume)
         self.set_volume(volume)
+        print "set OK"
         return JsonResponse({"volume": self.get_volume()})
 
     def get_volume(self):
@@ -45,6 +54,7 @@ class VolumeView(View):
         data = task.stdout.read()
         assert data.endswith("%\n")
         assert task.wait() == 0
+        print "cur volume: " + data[:-2]
         return int(data[:-2])
 
     def set_volume(self, volume):
@@ -57,8 +67,31 @@ class PrintView(FormView):
     success_url = reverse_lazy('print')
 
     def form_valid(self, form):
+        print "form valid"
         file = form.instance.file
         file.save(os.path.join(settings.MEDIA_ROOT, file.name), file)
+        print "file saved"
         print os.path.join(settings.MEDIA_ROOT, file.name)
         subprocess.call(["lp", os.path.join(settings.MEDIA_ROOT, file.name)])
+        print "printed"
         return super(FormView, self).form_valid(form)
+
+
+class AgarioView(View):
+    def get(self, request):
+        print "agario GET"
+        return render(request, 'agario.html')
+
+    def post(self, request):
+        print "agario POST"
+        width = gtk.gdk.screen_width()
+        height = gtk.gdk.screen_height()
+        data = dict(self.request.POST.iteritems())
+        x = float(data.pop("x"))
+        y = float(data.pop("y"))
+        print x, y
+        print x * width, y * height
+        subprocess.call(["xdotool", "mousemove", str(int(x * width)),
+                         str(int(y * height))])
+        print "mousemoved"
+        return HttpResponse("OK")
