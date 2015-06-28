@@ -1,11 +1,15 @@
 package kaczkipingujapobroadcascie.com.autodiscovery;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.webkit.ValueCallback;
+import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -27,6 +31,42 @@ public class BrowserActivity extends Activity {
         });
 
         webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
+
+        webView.setWebChromeClient(new WebChromeClient() {
+            //The undocumented magic method override
+            //Eclipse will swear at you if you try to put @Override here
+            // For Android 3.0+
+
+            private ValueCallback<Uri> mUploadMessage;
+            private final static int FILECHOOSER_RESULTCODE=1;
+
+            public void openFileChooser(ValueCallback<Uri> uploadMsg) {
+
+                mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("image/*");
+                startActivityForResult(Intent.createChooser(i, "File Chooser"), FILECHOOSER_RESULTCODE);
+
+            }
+
+            // For Android 3.0+
+            public void openFileChooser(ValueCallback uploadMsg, String acceptType) {
+                mUploadMessage = uploadMsg;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("*/*");
+                startActivityForResult(
+                        Intent.createChooser(i, "File Browser"),
+                        FILECHOOSER_RESULTCODE);
+            }
+
+            @SuppressWarnings("unused")
+            public void openFileChooser(ValueCallback<Uri> uploadMsg, String acceptType, String capture){
+                openFileChooser( uploadMsg, "" );
+            }
+        });
 
         Bundle data = getIntent().getExtras();
         webView.loadUrl("http://" + data.getString("url"));

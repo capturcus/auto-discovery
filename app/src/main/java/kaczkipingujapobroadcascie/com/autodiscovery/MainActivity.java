@@ -132,11 +132,13 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
                         resetSpinners();
                         Log.d("debug", "onConnect");
                         if(success) {
-                            Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
-                            Bundle data = new Bundle();
-                            data.putString("url", zinterface.url);
-                            intent.putExtras(data);
-                            startActivity(intent);
+                            if(!zinterface.url.isEmpty()) {
+                                Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
+                                Bundle data = new Bundle();
+                                data.putString("url", zinterface.url);
+                                intent.putExtras(data);
+                                startActivity(intent);
+                            }
                         } else {
                             // error handling
                         }
