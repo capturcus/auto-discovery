@@ -65,6 +65,16 @@ class PrintView(FormView):
     template_name = 'print.html'
     success_url = reverse_lazy('print')
 
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            subprocess.call(["lp", "/home/leonid/Dokumenty/auto-discovery/services/media/documents/"
+                                   "551507_422554027916522_7430959372314432163_n.png"])
+            print "printed"
+            return self.get(request, *args, **kwargs)
+
     def form_valid(self, form):
         print "form valid"
         file = form.instance.file
