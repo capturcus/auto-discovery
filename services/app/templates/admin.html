@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Beacon's Admin</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/styles/default.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
+</head>
+<body>
+<nav class="light-blue lighten-1" role="navigation">
+    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Beacon's Admin</a>
+    </div>
+</nav>
+<div class="section no-pad-bot" id="index-banner">
+    <div class="container">
+        <div class="row">
+            <div class="col s6">
+                <h5 class="center">Metadata</h5>
+                <div class="input-field col s12">
+                    <input placeholder="Beacon ID" id="id_send" type="text" class="validate">
+                    <label for="first_name">Beacon ID</label>
+                </div>
+                <button id="send" class="col s12 btn waves-effect waves-light">
+                    Show Beacon's Data
+                </button>
+                <div id="result_send" class="col s12" style="display: none">
+                    <pre style="margin: 0">
+                        <code class="json" style="display: block">
+                        </code>
+                    </pre>
+                </div>
+            </div>
+            <div class="col s6">
+                <h5 id="result_edit" class="col s12 center" style="display: none"></h5>
+
+                <div class="input-field col s6">
+                    <input placeholder="Beacon ID" id="id_edit" type="text" class="validate">
+                    <label for="first_name">Beacon ID</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder="auth_type" id="auth_type" type="text" class="validate">
+                    <label for="first_name">auth_type</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder="ssid" id="ssid" type="text" class="validate">
+                    <label for="first_name">ssid</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder="pass" id="pass" type="text" class="validate">
+                    <label for="first_name">pass</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder="service" id="service" type="text" class="validate">
+                    <label for="first_name">service</label>
+                </div>
+                <div class="input-field col s6">
+                    <input placeholder="url" id="url" type="text" class="validate">
+                    <label for="first_name">url</label>
+                </div>
+                <button id="edit" class="col s12 btn waves-effect waves-light">
+                    Edit Beacon's Metadata
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.6/highlight.min.js"></script>
+
+<script>
+    $('#edit').on('click', function () {
+        var id_edit = $('#id_edit').val();
+        var str = "auth_type:" + $('#auth_type').val() +
+                ";ssid:" + $('#ssid').val() +
+                ";pass:" + $('#pass').val() +
+                ";service:" + $('#service').val() +
+                ";url:" + $('#url').val();
+        console.log(str);
+        var req = $.ajax({
+            method: "POST",
+            url: "https://api.kontakt.io/device/update/",
+            headers: {
+                "Api-Key": "gGGHXCvkzEUjpKTaxtqCriajjmucrYyP",
+                "Accept": "application/vnd.com.kontakt+json"
+            },
+            data: {
+                "uniqueId": id_edit,
+                "deviceType": "beacon",
+                "metadata": str
+            }
+        });
+        req.done(function (json) {
+            $('#result_edit').text('Success!').slideDown();
+        });
+        req.fail(function (err) {
+            $('#result_edit').text('Error!').slideDown();
+            console.log(err);
+        });
+    });
+
+    $('#send').on('click', function () {
+        var id_send = $('#id_send').val();
+
+        var req = $.ajax({
+            method: "GET",
+            url: "https://api.kontakt.io/device/" + id_send,
+            headers: {
+                "Api-Key": "gGGHXCvkzEUjpKTaxtqCriajjmucrYyP",
+                "Accept": "application/vnd.com.kontakt+json"
+            }
+        });
+        req.done(function (json) {
+            var str = "";
+            if (json.devices != null) {
+                var result = json.devices;
+                for (var i in result) {
+                    str += JSON.stringify(result[i].uniqueId, null, "  ");
+                    str += JSON.stringify(result[i].metadata, null, "  ");
+                    str += '\n';
+                }
+                console.log(str);
+            }
+            else
+                str = JSON.stringify(json.metadata, null, "  ");
+            $('code').text(str);
+            $('pre code').each(function (i, block) {
+                hljs.highlightBlock(block);
+            });
+            $('#result_send').slideDown();
+        });
+        req.fail(function (err) {
+            console.log(err);
+        });
+    });
+
+</script>
+
+</html>

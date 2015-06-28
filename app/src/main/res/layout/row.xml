@@ -1,33 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     >
-    <TextView
-        android:orientation="vertical" android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textColor="#000"
-        android:fontFamily="Impact"
-        android:textSize="16pt"
-        android:padding="16dp"
-        android:id="@+id/beacon_name"
-        >
-    </TextView>
-    <TextView
-        android:textColor="#000"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TEST TEST"
-        android:background="#f0f"
-        android:id="@+id/test_view"
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:id="@+id/image_view"
+        android:padding="10dp"
         />
     <TextView
-        android:textColor="#000"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#0ff"
-        android:text="TEST TEST2"
-        android:id="@+id/test_view2"
+        android:id="@+id/beacon_name"
+        android:textSize="16pt"
+        android:textStyle="bold"
+        />
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/row_bar"
+        android:visibility="gone"
         />
 </LinearLayout>

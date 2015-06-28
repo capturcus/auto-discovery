@@ -4,7 +4,6 @@ import subprocess
 import os
 import gtk
 from app.forms import DocumentForm
-
 from django.core.urlresolvers import reverse_lazy
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render
@@ -95,3 +94,8 @@ class AgarioView(View):
                          str(int(y * height))])
         print "mousemoved"
         return HttpResponse("OK")
+
+
+class AdminView(FormView):
+    def get(self, request):
+        return render(request, 'admin.html')

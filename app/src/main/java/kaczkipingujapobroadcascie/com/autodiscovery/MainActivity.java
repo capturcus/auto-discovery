@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
     public static MainActivity instance = null;
 
     BeaconCommunication bc = null;
+
+    ListView lv = null;
 
     public MainActivity() {
         super();
@@ -41,12 +44,14 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
         ra = new RowAdapter(getApplicationContext());
 
         setContentView(R.layout.activity_main);
-        ListView lv = (ListView)findViewById(R.id.list_view);
+        lv = (ListView)findViewById(R.id.list_view);
         lv.setAdapter(ra);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ZeroConfInterface zci = ra.getItem(position);
+                LinearLayout ll = (LinearLayout) ra.getView(position, view, parent);
+                ((ProgressBar)ll.findViewById(R.id.row_bar)).setVisibility(View.VISIBLE);
                 runInterface(zci);
             }
         });
@@ -84,12 +89,6 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
         bc.onDestroy();
     }
 
-    public void insertFakeData() {
-        ZeroConfInterface test = new ZeroConfInterface();
-        test.name = "test1";
-        test.ssid = "print";
-    }
-
     @Override
     public void interfacesFound(final List<ZeroConfInterface> zinterfaces) {
         runOnUiThread(new Runnable() {
@@ -118,12 +117,19 @@ public class MainActivity extends AppCompatActivity implements BeaconCommunicati
         bc.stopSearch();
     }
 
+    private void resetSpinners() {
+        for(int i = 0; i < lv.getCount(); i++){
+            lv.getChildAt(i).findViewById(R.id.row_bar).setVisibility(View.GONE);
+        }
+    }
+
     private void runInterface(final ZeroConfInterface zinterface) {
         WifiUtils.connect(getApplicationContext(), zinterface.ssid, zinterface.password,
                 WifiUtils.EncryptionType.valueOf(zinterface.authType),
                 new WifiUtils.ConnectCallback() {
                     @Override
                     public void onConnect(boolean success) {
+                        resetSpinners();
                         Log.d("debug", "onConnect");
                         if(success) {
                             Intent intent = new Intent(MainActivity.this, BrowserActivity.class);

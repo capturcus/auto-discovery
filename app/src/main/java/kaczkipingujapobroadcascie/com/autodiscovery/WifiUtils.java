@@ -8,6 +8,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
+import android.os.SystemClock;
 import android.util.Log;
 
 import java.util.List;
@@ -35,7 +36,10 @@ public class WifiUtils {
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("debug", "onReceive");
-            if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {
+            WifiManager mgr = (WifiManager)
+                    context.getSystemService(Context.WIFI_SERVICE);
+            if(intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION) &&
+                    ssid_.equals(mgr.getConnectionInfo().getSSID())) {
                 NetworkInfo info = (NetworkInfo) intent.getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
                 Log.d("debug", info.getDetailedState().toString());
                 if(info.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
@@ -84,6 +88,12 @@ public class WifiUtils {
 
         WifiManager mgr = (WifiManager)
                 context.getSystemService(Context.WIFI_SERVICE);
+
+        if(mgr.isWifiEnabled() && newConf.SSID.equals(mgr.getConnectionInfo().getSSID())) {
+            Log.d("debug", "sdalidfiljhdsfjildsfjilsdafdsfdsflhdsfdsfkdfs");
+            callback.onConnect(true);
+            return;
+        }
         mgr.setWifiEnabled(true);
         mgr.addNetwork(newConf);
 
@@ -110,5 +120,7 @@ public class WifiUtils {
         IntentFilter filter = new IntentFilter();
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         context.registerReceiver(new ConnectBroadcastReceiver(newConf.SSID, callback), filter);
+
+        Log.d("debug", "connecting in async");
     }
 }
