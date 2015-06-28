@@ -26,6 +26,8 @@ public class BrowserActivity extends Activity {
             }
         });
 
+        webView.getSettings().setJavaScriptEnabled(true);
+
         Bundle data = getIntent().getExtras();
         webView.loadUrl("http://" + data.getString("url"));
     }
