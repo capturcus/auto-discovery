@@ -2,9 +2,19 @@
 {% block body %}
     <style>
         button {
-            margin-top: 15px;
-            width: 70%;
-            height: 200px;
+            width: 100%;
+            height: 100%;
+        }
+
+        div.btn.orange {
+            width: 100%;
+            display: block;
+            height: 100%;
+            padding: 0 !important;
+        }
+
+        span {
+            font-size: 12px !important;
         }
     </style>
     <div class="card-panel grey lighten-2">
@@ -12,18 +22,20 @@
 
         <form action="{% url 'print' %}" method="post" enctype="multipart/form-data">
             <div class="row">
-                <div class="col m8">
-                    <div class="file-field input-field">
-                        <div class="btn orange darken-4">
+                <div class="file-field input-field">
+                    <div class="col m4 s12 valign-wrapper">
+                        <div class="btn orange darken-4 valign">
                             <span>File</span>
                             <input type="file" name="file">
                         </div>
+                    </div>
+                    <div class="col m4 s12">
                         <div class="file-path-wrapper">
                             <input class="file-path validate" type="text">
                         </div>
                     </div>
                 </div>
-                <div class="col m4 valign-wrapper">
+                <div class="col m4 s12 valign-wrapper">
                     <button class="btn waves-effect waves-light orange darken-4 valign" type="submit" name="action">
                         <i class="material-icons">send</i>
                     </button>
