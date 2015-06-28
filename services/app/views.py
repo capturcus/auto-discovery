@@ -62,3 +62,7 @@ class PrintView(FormView):
         print os.path.join(settings.MEDIA_ROOT, file.name)
         subprocess.call(["lp", os.path.join(settings.MEDIA_ROOT, file.name)])
         return super(FormView, self).form_valid(form)
+
+class AdminView(FormView):
+    def get(self, request):
+        return render(request, 'admin.html')
